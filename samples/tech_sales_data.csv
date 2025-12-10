@@ -1,0 +1,16 @@
+Product,Region,Month,Sales,Units_Sold,Customer_Satisfaction
+Laptop,North,Jan,15000,15,4.5
+Laptop,South,Jan,12000,12,4.2
+Phone,North,Jan,8000,20,4.0
+Phone,South,Jan,9500,24,4.3
+Tablet,East,Jan,5000,10,3.8
+Laptop,West,Feb,18000,18,4.7
+Phone,West,Feb,11000,28,4.1
+Tablet,North,Feb,6500,13,3.9
+Headphones,South,Feb,3000,50,4.8
+SmartWatch,East,Feb,4500,15,4.2
+Laptop,North,Mar,16000,16,4.6
+Phone,East,Mar,8200,21,4.0
+Headphones,West,Mar,3200,52,4.9
+SmartWatch,South,Mar,4800,16,4.3
+Tablet,West,Mar,5200,11,3.8
