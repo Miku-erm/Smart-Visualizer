@@ -1,29 +1,30 @@
-# 📊 Weekly Data Visualization Project
+# 🚀 Smart Visualizer
 
-**Course**: Data Science & Full Stack Development  
-**Module**: Weekly Challenge (React + Python/R Hybrid)
+**Powered by Google AI Studio**
 
-## 🚀 Project Overview
+This project is a sophisticated data analysis tool that merges statistical power with Artificial Intelligence. By leveraging **Google AI Studio's Gemini models**, Smart Visualizer provides intelligence alongside raw data processing.
+
+## 🌟 Project Overview
 
 This architecture combines the best of all worlds:
-1.  **React (Frontend)**: A modern, high-performance UI.
-2.  **Python (Orchestrator)**: Manages requests, connects to Gemini, and controls the R process.
-3.  **R (Analysis Engine)**: Performs the heavy-duty statistical visualization using `ggplot2`.
+1.  **React (Frontend)**: A modern, high-performance UI for seamless user interaction.
+2.  **Python (Orchestrator)**: Manages requests and integrates with **Google AI Studio** (Gemini API) for generating automatic insights.
+3.  **R (Analysis Engine)**: Performs heavy-duty statistical visualization using `ggplot2` and `plumber`.
 
-### ✨ Key Features
+## ✨ Key Features
 
--   **Frontend**: React + Vite (running on port 5173).
--   **Backend**: Python Flask (running on port 5000), which automatically launches the R Plumber API (port 8000).
--   **AI Integration**: Python handles the Google Gemini API calls for insights.
--   **Data Viz**: R generates 10 beautiful charts (Base64 encoded) per dataset.
--   **Subprocess Management**: Python manages the lifecycle of the R server.
+-   **Deep AI Integration**: Utilizes **Google AI Studio** to interpret complex datasets and provide natural language summaries.
+-   **Advanced Visualization**: Generates 10 distinct types of high-quality plots (Bar, Scatter, Heatmap, etc.) using R's robust libraries.
+-   **Smart Architecture**: Python Flask manages the lifecycle of the R backend, ensuring a unified experience.
+-   **Modern UI**: Built with Vite + React, featuring a dynamic chart selector and dark mode aesthetics.
 
 ## 🛠 Installation & Setup
 
 ### 1. Prerequisites
 -   **Node.js** (for React)
 -   **Python 3.10+**
--   **R** (with packages: `plumber`, `ggplot2`, `dplyr`, `readr`, `readxl`, etc.)
+-   **R** (installed locally)
+-   **Google AI Studio API Key**
 
 ### 2. Python Setup
 ```bash
@@ -40,11 +41,11 @@ npm install
 ## 🏃‍♂️ How to Run
 
 1.  **Start the Backend**:
-    Open a terminal in the root folder (`weekly`) and run:
+    Open a terminal in the root folder and run:
     ```bash
-    py app.py
+    python app.py
     ```
-    *This will start Python on port 5000 AND automatically launch the R server on port 8000.*
+    *This starts the Python orchestrator (Port 5000) and automatically launches the R Analysis Engine (Port 8000).*
 
 2.  **Start the Frontend**:
     Open a **new** terminal in the `frontend` folder and run:
@@ -52,15 +53,14 @@ npm install
     npm run dev
     ```
 
-3.  **Open Browser**:
-    Go to `http://localhost:5173`.
+3.  **Explore**:
+    Go to `http://localhost:5173`, upload your dataset, and watch Smart Visualizer work its magic.
 
-4.  **Analyze**:
-    Upload a CSV/Excel file. Python will route it to R, get charts, adding AI insights, and show them to you.
-
-## 🥚 Easter Eggs
--   **Antigravity**: Python backend imports `antigravity`.
--   **R Fortunes**: R backend uses `fortunes`.
+## 🤖 AI Capabilities
+This project uses **Google AI Studio** to:
+-   Analyze data patterns.
+-   Generate summaries suitable for reports.
+-   Provide context-aware insights on the generated charts.
 
 ---
 *"Python orchestrates, R calculates, React fascinates."*
