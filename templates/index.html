@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Data Challenge | AI & Vis</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Weekly Data Challenge 🚀</h1>
+            <p>Data Visualization & AI Integration</p>
+        </header>
+
+        <!-- Instruction / Easter Egg Hint -->
+        <div class="info-card">
+            <h3>📋 Instructions</h3>
+            <p>1. Upload your dataset (CSV/Excel), a cover image, and your NotebookLM Audio Overview file.</p>
+            <p>2. The system will generate 10 charts. Aim for <strong>100 points</strong>!</p>
+            <p>3. Use the AI Analyst below to interpret your data.</p>
+            <p class="small">*Reminder: Don't forget to check the 'R Knowledge' file in Classroom options.</p>
+        </div>
+
+        <!-- NotebookLM Section -->
+        <div class="notebooklm-section">
+            <div class="card">
+                <h2>🎧 NotebookLM Audio Overview</h2>
+                <div class="audio-player-wrapper">
+                    <p>Load your generated Audio Overview here regarding the dataset:</p>
+                    <input type="file" id="audioInput" accept="audio/*">
+                    <audio id="audioPlayer" controls style="display:none; width: 100%; margin-top: 10px;"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="card">
+                <h2>📂 Project Upload</h2>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label>Dataset (CSV/Excel)</label>
+                        <input type="file" id="datasetInput" name="dataset" required>
+                    </div>
+                <!-- 
+                    <div class="form-group">
+                        <label>Cover Image</label>
+                        <input type="file" id="imageInput" name="image" accept="image/*">
+                    </div> 
+                -->
+                    <button type="submit" class="btn-primary">Generate Analysis & Charts</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Scoreboard -->
+        <div id="scoreSection" class="hidden">
+            <div class="score-card">
+                <span>Total Score: </span>
+                <span id="scoreValue">0</span> / 100
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div id="chartsGrid" class="charts-grid hidden"></div>
+
+        <!-- AI Section -->
+        <div id="aiSection" class="ai-section hidden">
+            <div class="card">
+                <h2>🧠 Google AI Studio Analyst</h2>
+                <p>This data has been summarized. Ask for insights!</p>
+                <textarea id="aiPrompt" placeholder="E.g., What are the key trends in this data? Interpret the scatter plot correlation.">Analyze the provided data summary and list key insights.</textarea>
+                <div class="api-key-group">
+                    <input type="password" id="apiKeyInput" placeholder="Enter Gemini API Key (Optional if server env set)">
+                </div>
+                <button id="askAiBtn" class="btn-secondary">Ask Gemini</button>
+                <div id="aiResponse" class="ai-response hidden"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

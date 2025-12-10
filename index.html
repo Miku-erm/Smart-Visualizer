@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Veri Görselleştirme R/Plumber Projesi</title>
+    <!-- Google Fonts: Outfit for premium feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --accent-color: #38bdf8;
+            --button-bg: #3b82f6;
+            --button-hover: #2563eb;
+            --success-color: #4ade80;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        h1 {
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        /* Audio Player Styling */
+        audio {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 30px;
+            border-radius: 30px;
+            background-color: var(--card-bg);
+            /* Attempts to blend */
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, var(--button-bg), #60a5fa);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: var(--accent-color);
+            display: none;
+            /* Controlled by JS */
+        }
+
+        #score-container {
+            margin-top: 30px;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            /* Controlled by JS */
+        }
+
+        #score-display {
+            font-size: 4em;
+            color: var(--success-color);
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.25);
+            margin: 10px 0;
+        }
+
+        #plot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .plot-item {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .plot-item:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-color);
+        }
+
+        .plot-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>LLM Destekli R Veri Görselleştirme Projesi (Titanic)</h1>
+
+        <!-- Ses (Audio Elementi) -->
+        <audio controls autoplay loop>
+            <!-- Placeholder ses dosyası. -->
+            <source src="background_music.mp3" type="audio/mp3">
+            Tarayıcınız audio elementini desteklemiyor.
+        </audio>
+
+        <br>
+
+        <button onclick="analyzeData()">Veriyi Analiz Et ve 10 Grafik Üret</button>
+
+        <p id="loading-status" class="loading">Grafikler üretiliyor, lütfen bekleyin...</p>
+
+        <div id="score-container">
+            <h2 style="margin:0; font-weight:400; color: #94a3b8;">Üretim Puanı</h2>
+            <div id="score-display">0</div>
+            <p style="margin:0; color: #94a3b8; font-size:0.9em;">(Başarılı Grafik Sayısı * 10)</p>
+        </div>
+
+        <div id="plot-grid">
+            <!-- Grafikler buraya yüklenecek -->
+        </div>
+    </div>
+
+    <script>
+        // Plumber API'nin çalıştığı adres. 
+        // Eğer bu HTML dosyasını çift tıklayarak açıyorsanız CORS sorunu yaşayabilirsiniz.
+        // Plumber'ı çalıştırdıktan sonra tarayıcıda doğrudan R sunucu adresini de ziyaret edebilirsiniz.
+        const API_URL = 'http://127.0.0.1:8000/plot';
+
+        const scoreDisplay = document.getElementById('score-display');
+        const plotGrid = document.getElementById('plot-grid');
+        const loadingStatus = document.getElementById('loading-status');
+        const scoreContainer = document.getElementById('score-container');
+
+        async function analyzeData() {
+            // Arayüzü temizle ve yükleniyor durumunu göster
+            plotGrid.innerHTML = '';
+            scoreContainer.style.display = 'none';
+            loadingStatus.style.display = 'block';
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP Hata! Durum: ${response.status}`);
+                }
+                const data = await response.json();
+
+                // Puanı Göster
+                animateScore(data.score);
+                scoreContainer.style.display = 'block';
+
+                // Grafikleri Grid'de Göster
+                data.plots.forEach((base64String, index) => {
+                    const plotItem = document.createElement('div');
+                    plotItem.classList.add('plot-item');
+
+                    const img = document.createElement('img');
+                    img.src = base64String;
+                    img.alt = `Grafik ${index + 1}`;
+
+                    plotItem.appendChild(img);
+                    plotGrid.appendChild(plotItem);
+                });
+
+            } catch (error) {
+                scoreDisplay.textContent = 'HATA';
+                scoreContainer.style.display = 'block';
+                plotGrid.innerHTML = `<p style="color: #ef4444; font-weight:bold;">API çağrılırken bir sorun oluştu. Plumber sunucusunun (Port 8000) çalışır durumda olduğundan emin olun.<br>Hata: ${error.message}</p>`;
+                console.error('Analiz hatası:', error);
+            } finally {
+                loadingStatus.style.display = 'none';
+            }
+        }
+
+        // Puan animasyonu
+        function animateScore(targetScore) {
+            let currentScore = 0;
+            const duration = 1000; // ms
+            const stepTime = 20;
+            const steps = duration / stepTime;
+            const increment = targetScore / steps;
+
+            const timer = setInterval(() => {
+                currentScore += increment;
+                if (currentScore >= targetScore) {
+                    currentScore = targetScore;
+                    clearInterval(timer);
+                }
+                scoreDisplay.textContent = Math.floor(currentScore);
+            }, stepTime);
+        }
+    </script>
+</body>
+
+</html>
